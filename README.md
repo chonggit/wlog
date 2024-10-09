@@ -12,6 +12,7 @@
 ## MS SQL Server
 
 1. [MS SQL 2008 检测字符串是否包含数字、逗号以外的字符](/03.ms%20sql%20server/01.MS%20SQL%202008%20检测字符串是否包含数字、逗号以外的字符.md)
+2. [授予用户或组 EXECUTE 权限](/03.ms%20sql%20server/02.授予用户或组%20EXECUTE%20权限.md)
 
 ## CentOS
 
