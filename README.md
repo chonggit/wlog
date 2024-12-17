@@ -20,6 +20,7 @@
 2. [CentOS 将 yum 源更换为阿里镜像](/04.CentOS/02.CentOS%20将%20yum%20源更换为阿里镜像.md)
 3. [在 CentOS 中部署 Docker](/04.CentOS/03.在%20CentOS%20中部署%20Docker.md)
 4. [CentOS 查看开放的端口](/04.CentOS/04.CentOS%20查看开放的端口.md)
+5. [CentOS 防火墙配置](/04.CentOS/05.CentOS%20防火墙配置.md)
 
 ## 金蝶
 
