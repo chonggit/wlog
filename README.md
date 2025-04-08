@@ -25,6 +25,7 @@
 ## 金蝶
 
 1. [金蝶学习成长中心](https://vip.kingdee.com/school?productLineId=1&lang=zh-CN)
+2. [WebAPI明文用户名密码传输安全改造指南](/08.金蝶/01.WebAPI明文用户名密码传输安全改造指南.md)
 
 ## 纷享销客
 
