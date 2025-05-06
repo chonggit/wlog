@@ -38,6 +38,10 @@
 1. [金蝶学习成长中心](https://vip.kingdee.com/school?productLineId=1&lang=zh-CN)
 2. [WebAPI明文用户名密码传输安全改造指南](./08.金蝶/01.WebAPI明文用户名密码传输安全改造指南.md)
 
+## .NET
+
+1. [Dapper 自定义数据类型转换]
+
 ## 纷享销客
 
 1. [开发者手册](https://help.fxiaoke.com/0568)
