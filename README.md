@@ -45,3 +45,7 @@
 ## 纷享销客
 
 1. [开发者手册](https://help.fxiaoke.com/0568)
+
+## SAP Business One
+
+1. [SAP Business One SDK 10.0 - Database Tables Reference](https://help.sap.com/doc/089315d8d0f8475a9fc84fb919b501a3/10.0/en-US/SDKHelp/Table_Overview.htm)
