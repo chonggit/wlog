@@ -1,0 +1,2372 @@
+# CRM客户 Web API 操作原始内容
+
+> 来源页面：全部 > 客户关系管理 > 客户管理 > CRM客户
+
+## 操作列表
+
+| 操作 | 标识 | 文本长度 |
+| --- | --- | ---: |
+| 删除 | Delete | 1315 |
+| 查看 | View | 1089 |
+| 暂存 | Draft | 21865 |
+| 保存 | Save | 21864 |
+| 提交 | Submit | 1602 |
+| 审核 | Audit | 1873 |
+| 反审核 | UnAudit | 1760 |
+| 禁用 | Forbid | 1684 |
+| 反禁用 | Enable | 1684 |
+| 撤销 | CancelAssign | 1384 |
+| 分配 | Allocate | 1174 |
+| 取消分配 | CancelAllocate | 1180 |
+| 批量保存 | BatchSave | 3047 |
+| 单据查询 | ExecuteBillQuery | 1876 |
+| 单据查询(json) | BillQuery | 1861 |
+| 元数据查询 | QueryBusinessInfo | 843 |
+| 工作流审批 | WorkflowAudit | 1478 |
+| 切换组织 | SwitchOrg | 1031 |
+| 分组保存 | GroupSave | 1458 |
+| 分组信息查询 | QueryGroupInfo | 1171 |
+| 分组删除 | GroupDelete | 1071 |
+
+## 删除 (`Delete`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     2.1.CreateOrgId：创建者组织内码（非必录）
+     2.2.Numbers：单据编码集合，数组类型，格式：[No1,No2,...]（使用编码时必录）
+     2.3.Ids：单据内码集合，字符串类型，格式："Id1,Id2,..."（使用内码时必录）
+     2.4.NetworkCtrl：是否启用网控，布尔类型，默认false（非必录）
+
+二、返回结果：
+{"Result":{"ResponseStatus":{"ErrorCode":"","IsSuccess":"false","Errors":[{"FieldName":"","Message":"","DIndex":0}],"SuccessEntitys":[{"Id":"","Number":"","DIndex":0}],"SuccessMessages":[{"FieldName":"","Message":"","DIndex":0}],"MsgCode":""}}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.Delete("CRM_CUST","{"CreateOrgId":0,"Numbers":[],"Ids":"","NetworkCtrl":""}");
+
+四、JSON格式数据：
+{
+    "CreateOrgId": 0,
+    "Numbers": [],
+    "Ids": "",
+    "NetworkCtrl": ""
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 查看 (`View`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     2.1.CreateOrgId：创建者组织内码（非必录）
+     2.2.Number：单据编码，字符串类型（使用编码时必录）
+     2.3.Id：表单内码（使用内码时必录）
+     2.4.IsSortBySeq：单据体是否按序号排序，默认false
+
+二、返回结果：
+{"Result":{"ResponseStatus":{"IsSuccess":"false"},"Result":"{}"}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.View("CRM_CUST","{"CreateOrgId":0,"Number":"","Id":"","IsSortBySeq":"false"}");
+
+四、JSON格式数据：
+{
+    "CreateOrgId": 0,
+    "Number": "",
+    "Id": "",
+    "IsSortBySeq": "false"
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 暂存 (`Draft`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     2.1.NeedUpDateFields：需要更新的字段，数组类型，格式：[key1,key2,...] （非必录）注（更新字段时Model数据包中必须设置内码，若更新单据体字段还需设置分录内码）
+     2.2.NeedReturnFields：需返回结果的字段集合，数组类型，格式：[key,entitykey.key,...]（非必录） 注（返回单据体字段格式：entitykey.key）
+     2.3.IsDeleteEntry：是否删除已存在的分录，布尔类型，默认true（非必录）
+     2.4.SubSystemId：表单所在的子系统内码，字符串类型（非必录）
+     2.5.IsVerifyBaseDataField：是否验证所有的基础资料有效性，布尔类，默认false（非必录）
+     2.6.IsEntryBatchFill：是否批量填充分录，默认true（非必录）
+     2.7.ValidateFlag：是否验证数据合法性标志，布尔类型，默认true（非必录）注（设为false时不对数据合法性进行校验）
+     2.8.NumberSearch：是否用编码搜索基础资料，布尔类型，默认true（非必录）
+     2.9.IsAutoAdjustField：是否自动调整JSON字段顺序，布尔类型，默认false（非必录）
+     2.10.InterationFlags：交互标志集合，字符串类型，分号分隔，格式："flag1;flag2;..."（非必录） 例如（允许负库存标识：STK_InvCheckResult）
+     2.11.IgnoreInterationFlag：是否允许忽略交互，布尔类型，默认true（非必录）
+     2.12.IsControlPrecision：是否控制精度，为true时对金额、单价和数量字段进行精度验证，默认false（非必录）
+     2.13.ValidateRepeatJson：校验Json数据包是否重复传入，一旦重复传入，接口调用失败，传true则启用校验，传false则不校验（非必录）
+     2.14.Model：表单数据包，JSON类型（必录）
+备注:
+1.示例Model数据包中字段顺序不建议改变，否则可能会有相互影响，如果出现字段值被覆盖或丢失，则可以尝试把字段顺序向后调整一下。
+2.示例Model数据包默认包含允许引入的字段，实际按需构建既可。
+3.如需创建关联关系，可参考https://club.kingdee.com/forum.php?mod=viewthread&tid=1394265 。
+4.对于重要API接口，应设置幂等性校验、设置对应候选键（唯一性字段）的唯一索引等防重调用机制，以防并发导致数据重复。
+
+二、返回结果：
+{"Result":{"ResponseStatus":{"ErrorCode":"","IsSuccess":"false","Errors":[{"FieldName":"","Message":"","DIndex":0}],"SuccessEntitys":[{"Id":"","Number":"","DIndex":0}],"SuccessMessages":[{"FieldName":"","Message":"","DIndex":0}],"MsgCode":""},"Id":"","Number":"","NeedReturnData":[{}]}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.Draft("CRM_CUST","{"NeedUpDateFields":[],"NeedReturnFields":[],"IsDeleteEntry":"true","SubSystemId":"","IsVerifyBaseDataField":"false","IsEntryBatchFill":"true","ValidateFlag":"true","NumberSearch":"true","IsAutoAdjustField":"true","InterationFlags":"","IgnoreInterationFlag":"","IsControlPrecision":"false","ValidateRepeatJson":"true","Model":{"FCUSTID":0,"FCreateOrgId":{"FNumber":""},"FNumber":"","FUseOrgId":{"FNumber":""},"FName":"","FShortName":"","FCOUNTRY":{"FNumber":""},"FPROVINCIAL":{"FNumber":""},"FADDRESS":"","FZIP":"","FWEBSITE":"","FTEL":"","FFAX":"","FCompanyClassify":{"FNumber":""},"FCompanyNature":{"FNumber":""},"FCompanyScale":{"FNumber":""},"FINVOICETITLE":"","FTAXREGISTERCODE":"","FINVOICEBANKNAME":"","FINVOICEBANKACCOUNT":"","FINVOICETEL":"","FINVOICEADDRESS":"","FSUPPLIERID":{"FNumber":""},"FIsDefPayer":"false","FIsGroup":"false","FGROUPCUSTID":{"FNumber":""},"FCustTypeId":{"FNumber":""},"FGroup":{"FNUMBER":""},"FTRADINGCURRID":{"FNumber":""},"FCorrespondOrgId":{"FNumber":""},"FDescription":"","FSALGROUPID":{"FNumber":""},"FSETTLETYPEID":{"FNumber":""},"FRECCONDITIONID":{"FNumber":""},"FTRANSLEADTIME":0,"FPRICELISTID":{"FNumber":""},"FDISCOUNTLISTID":{"FNumber":""},"FTaxType":{"FNumber":""},"FInvoiceType":"","FRECEIVECURRID":{"FNumber":""},"FPriority":0,"FTaxRate":{"FNumber":""},"FISCREDITCHECK":"false","FIsTrade":"false","F_PAEZ_Assistant":{"FNumber":""},"FUncheckExpectQty":"false","F_PAEZ_Assistant1":{"FNumber":""},"F_PAEZ_CheckBox":"false","F_PAEZ_Assistant2":{"FNumber":""},"F_FzDate":"1900-01-01","FLegalPerson":"","F_ora_Combo":"","FRegisterFund":"","F_CreditLine":0,"F_XYcur":{"FNUMBER":""},"FFoundDate":"","FDomains":"","F_ora_licensenumber":"","F_ora_Dateofestablishment":"1900-01-01","FSOCIALCRECODE":"","F_ora_Legalrepresentative":"","FRegisterAddress":"","F_ora_Groupsize":"","F_ora_Employeesize":"","FScope":"","F_ora_Registeredcapita":"","F_ora_Paidincapital":"","F_ora_companyassets":"","F_ora_Groupassetvalue":"","F_ORA_lastyearcompanies":"","F_ORA_lastyeargroups":"","F_ora_directormail":"","F_ora_directorfax":"","F_ora_directorphone":"","F_ora_directorname":"","F_ora_Commercialproducts":"","F_ora_Expectedpurchase":"","F_ora_Productioncategory":"","FIsVMIReport":"false","F_AutoAllocate":"false","F_RESP_XSY":[{"FStaffNumber":""}],"F_RESP_XSJL":[{"FStaffNumber":""}],"F_RESP_XSJLMC":"","F_RESP_XSYMC":"","F_ora_YWMC":"","F_ora_Text2":"","F_ora_Text_qtr":"","F_Enterprise_nature":"","F_Listed_companies":"","FT_BD_CUSTOMEREXT":{"FEntryId":0,"FEnableSL":"false","FFreezeLimit":"","FFreezeOperator":{"FUserID":""},"FFreezeDate":"1900-01-01","FPROVINCE":{"FNumber":""},"FCITY":{"FNumber":""},"FDefaultConsiLoc":{"FNUMBER":""},"FDefaultSettleLoc":{"FNUMBER":""},"FDefaultPayerLoc":{"FNUMBER":""},"FDefaultContact":{"FNUMBER":""},"FMarginLevel":0,"FDebitCard":"","FSettleId":{"FNUMBER":""},"FChargeId":{"FNUMBER":""},"FALLOWJOINZHJ":"false","FStarOrgId":{"FNUMBER":""}},"FCRMCustomer":{"FEntryId":0,"FSUPERIORCUSTID":{"FNUMBER":""},"FLastContactDate":"1900-01-01","FYearReceive":0,"FTotalReceive":0,"FExpireReceive":0,"FSrcId":0,"FSrcFormId":"","FMainContact":"","FPhone":"","FCUSTValue":"","FCustType":{"FNumber":""},"FYearOrder":0,"FTotalOrder":0,"FAverageOrder":0,"FYearOutStock":0,"FTotalOutStock":0,"FMARACTIVITYID":{"FBILLNO":""},"FWeiXinMarketingId":{"FBILLNO":""}},"FT_BD_CUSTLOCATION":[{"FContactId":{"FNUMBER":""},"FISDEFAULT":"false","FIsDefaultConsigneeCT":"false","FIsCopy":"false"}],"FT_BD_CUSTBANK":[{"FENTRYID":0,"FCOUNTRY1":{"FNumber":""},"FBANKCODE":"","FACCOUNTNAME":"","FBankTypeRec":{"FNUMBER":""},"FTextBankDetail":"","FBankDetail":{"FNUMBER":""},"FOPENBANKNAME":"","FOpenAddressRec":"","FCNAPS":"","FCURRENCYID":{"FNumber":""},"FISDEFAULT1":"false"}],"FT_BD_CUSTCONTACT":[{"FENTRYID":0,"FNUMBER1":"","FNAME1":"","FADDRESS1":"","FTRANSLEADTIME1":0,"FMOBILE":"","FIsDefaultConsignee":"false","FIsDefaultSettle":"false","FIsDefaultPayer":"false","FIsUsed":"false","F_ora_Assistant":{"FNumber":""},"F_ora_ddywmc":""}],"FT_BD_CUSTORDERORG":[{"FEntryID":0,"FOrderOrgId":{"FNumber":""},"FIsDefaultOrderOrg":"false"}],"FT_BD_CUSTSUBACCOUNT":[{"FEntryID":0,"FSUBACCOUNTTYPE":"","FSUBACCOUNT":""}],"F_ora_Entity":[{"FEntryID":0,"F_ora_Text":"","F_ora_Base":{"FSTAFFNUMBER":""},"F_UpdateUser":{"FUserID":""},"F_UpdateDate":"1900-01-01","F_ora_Text1":""}],"F_ora_Entity1":[{"FEntryID":0,"F_ora_Shareholdername":"","F_ora_percent":""}],"F_ora_Nameofrelatedcompany":[{"FEntryID":0,"F_ora_companyname":""}],"FCRMAllocation":[{"FCooperationType":"","FEmployee":{"FSTAFFNUMBER":""},"FDept":{"FNUMBER":""},"FRead":"false","FModify":"false","FDelete":"false","FAllocation":"false","FMerger":"false","FTrade":"false","FAllocUser":{"FUSERACCOUNT":""},"FAllocTime":"1900-01-01"}],"FReleventCUST":[{"FEntryID":0,"FRelation":"","FRelaCustomer":{"FNUMBER":""},"FRelaContact":{"FNUMBER":""},"FRelaTel":"","FRelaRemark":""}]}}");
+
+四、JSON格式数据：
+{
+    "NeedUpDateFields": [],
+    "NeedReturnFields": [],
+    "IsDeleteEntry": "true",
+    "SubSystemId": "",
+    "IsVerifyBaseDataField": "false",
+    "IsEntryBatchFill": "true",
+    "ValidateFlag": "true",
+    "NumberSearch": "true",
+    "IsAutoAdjustField": "true",
+    "InterationFlags": "",
+    "IgnoreInterationFlag": "",
+    "IsControlPrecision": "false",
+    "ValidateRepeatJson": "true",
+    "Model": {
+        "FCUSTID": 0,
+        "FCreateOrgId": {
+            "FNumber": ""
+        },
+        "FNumber": "",
+        "FUseOrgId": {
+            "FNumber": ""
+        },
+        "FName": "",
+        "FShortName": "",
+        "FCOUNTRY": {
+            "FNumber": ""
+        },
+        "FPROVINCIAL": {
+            "FNumber": ""
+        },
+        "FADDRESS": "",
+        "FZIP": "",
+        "FWEBSITE": "",
+        "FTEL": "",
+        "FFAX": "",
+        "FCompanyClassify": {
+            "FNumber": ""
+        },
+        "FCompanyNature": {
+            "FNumber": ""
+        },
+        "FCompanyScale": {
+            "FNumber": ""
+        },
+        "FINVOICETITLE": "",
+        "FTAXREGISTERCODE": "",
+        "FINVOICEBANKNAME": "",
+        "FINVOICEBANKACCOUNT": "",
+        "FINVOICETEL": "",
+        "FINVOICEADDRESS": "",
+        "FSUPPLIERID": {
+            "FNumber": ""
+        },
+        "FIsDefPayer": "false",
+        "FIsGroup": "false",
+        "FGROUPCUSTID": {
+            "FNumber": ""
+        },
+        "FCustTypeId": {
+            "FNumber": ""
+        },
+        "FGroup": {
+            "FNUMBER": ""
+        },
+        "FTRADINGCURRID": {
+            "FNumber": ""
+        },
+        "FCorrespondOrgId": {
+            "FNumber": ""
+        },
+        "FDescription": "",
+        "FSALGROUPID": {
+            "FNumber": ""
+        },
+        "FSETTLETYPEID": {
+            "FNumber": ""
+        },
+        "FRECCONDITIONID": {
+            "FNumber": ""
+        },
+        "FTRANSLEADTIME": 0,
+        "FPRICELISTID": {
+            "FNumber": ""
+        },
+        "FDISCOUNTLISTID": {
+            "FNumber": ""
+        },
+        "FTaxType": {
+            "FNumber": ""
+        },
+        "FInvoiceType": "",
+        "FRECEIVECURRID": {
+            "FNumber": ""
+        },
+        "FPriority": 0,
+        "FTaxRate": {
+            "FNumber": ""
+        },
+        "FISCREDITCHECK": "false",
+        "FIsTrade": "false",
+        "F_PAEZ_Assistant": {
+            "FNumber": ""
+        },
+        "FUncheckExpectQty": "false",
+        "F_PAEZ_Assistant1": {
+            "FNumber": ""
+        },
+        "F_PAEZ_CheckBox": "false",
+        "F_PAEZ_Assistant2": {
+            "FNumber": ""
+        },
+        "F_FzDate": "1900-01-01",
+        "FLegalPerson": "",
+        "F_ora_Combo": "",
+        "FRegisterFund": "",
+        "F_CreditLine": 0,
+        "F_XYcur": {
+            "FNUMBER": ""
+        },
+        "FFoundDate": "",
+        "FDomains": "",
+        "F_ora_licensenumber": "",
+        "F_ora_Dateofestablishment": "1900-01-01",
+        "FSOCIALCRECODE": "",
+        "F_ora_Legalrepresentative": "",
+        "FRegisterAddress": "",
+        "F_ora_Groupsize": "",
+        "F_ora_Employeesize": "",
+        "FScope": "",
+        "F_ora_Registeredcapita": "",
+        "F_ora_Paidincapital": "",
+        "F_ora_companyassets": "",
+        "F_ora_Groupassetvalue": "",
+        "F_ORA_lastyearcompanies": "",
+        "F_ORA_lastyeargroups": "",
+        "F_ora_directormail": "",
+        "F_ora_directorfax": "",
+        "F_ora_directorphone": "",
+        "F_ora_directorname": "",
+        "F_ora_Commercialproducts": "",
+        "F_ora_Expectedpurchase": "",
+        "F_ora_Productioncategory": "",
+        "FIsVMIReport": "false",
+        "F_AutoAllocate": "false",
+        "F_RESP_XSY": [
+            {
+                "FStaffNumber": ""
+            }
+        ],
+        "F_RESP_XSJL": [
+            {
+                "FStaffNumber": ""
+            }
+        ],
+        "F_RESP_XSJLMC": "",
+        "F_RESP_XSYMC": "",
+        "F_ora_YWMC": "",
+        "F_ora_Text2": "",
+        "F_ora_Text_qtr": "",
+        "F_Enterprise_nature": "",
+        "F_Listed_companies": "",
+        "FT_BD_CUSTOMEREXT": {
+            "FEntryId": 0,
+            "FEnableSL": "false",
+            "FFreezeLimit": "",
+            "FFreezeOperator": {
+                "FUserID": ""
+            },
+            "FFreezeDate": "1900-01-01",
+            "FPROVINCE": {
+                "FNumber": ""
+            },
+            "FCITY": {
+                "FNumber": ""
+            },
+            "FDefaultConsiLoc": {
+                "FNUMBER": ""
+            },
+            "FDefaultSettleLoc": {
+                "FNUMBER": ""
+            },
+            "FDefaultPayerLoc": {
+                "FNUMBER": ""
+            },
+            "FDefaultContact": {
+                "FNUMBER": ""
+            },
+            "FMarginLevel": 0,
+            "FDebitCard": "",
+            "FSettleId": {
+                "FNUMBER": ""
+            },
+            "FChargeId": {
+                "FNUMBER": ""
+            },
+            "FALLOWJOINZHJ": "false",
+            "FStarOrgId": {
+                "FNUMBER": ""
+            }
+        },
+        "FCRMCustomer": {
+            "FEntryId": 0,
+            "FSUPERIORCUSTID": {
+                "FNUMBER": ""
+            },
+            "FLastContactDate": "1900-01-01",
+            "FYearReceive": 0,
+            "FTotalReceive": 0,
+            "FExpireReceive": 0,
+            "FSrcId": 0,
+            "FSrcFormId": "",
+            "FMainContact": "",
+            "FPhone": "",
+            "FCUSTValue": "",
+            "FCustType": {
+                "FNumber": ""
+            },
+            "FYearOrder": 0,
+            "FTotalOrder": 0,
+            "FAverageOrder": 0,
+            "FYearOutStock": 0,
+            "FTotalOutStock": 0,
+            "FMARACTIVITYID": {
+                "FBILLNO": ""
+            },
+            "FWeiXinMarketingId": {
+                "FBILLNO": ""
+            }
+        },
+        "FT_BD_CUSTLOCATION": [
+            {
+                "FContactId": {
+                    "FNUMBER": ""
+                },
+                "FISDEFAULT": "false",
+                "FIsDefaultConsigneeCT": "false",
+                "FIsCopy": "false"
+            }
+        ],
+        "FT_BD_CUSTBANK": [
+            {
+                "FENTRYID": 0,
+                "FCOUNTRY1": {
+                    "FNumber": ""
+                },
+                "FBANKCODE": "",
+                "FACCOUNTNAME": "",
+                "FBankTypeRec": {
+                    "FNUMBER": ""
+                },
+                "FTextBankDetail": "",
+                "FBankDetail": {
+                    "FNUMBER": ""
+                },
+                "FOPENBANKNAME": "",
+                "FOpenAddressRec": "",
+                "FCNAPS": "",
+                "FCURRENCYID": {
+                    "FNumber": ""
+                },
+                "FISDEFAULT1": "false"
+            }
+        ],
+        "FT_BD_CUSTCONTACT": [
+            {
+                "FENTRYID": 0,
+                "FNUMBER1": "",
+                "FNAME1": "",
+                "FADDRESS1": "",
+                "FTRANSLEADTIME1": 0,
+                "FMOBILE": "",
+                "FIsDefaultConsignee": "false",
+                "FIsDefaultSettle": "false",
+                "FIsDefaultPayer": "false",
+                "FIsUsed": "false",
+                "F_ora_Assistant": {
+                    "FNumber": ""
+                },
+                "F_ora_ddywmc": ""
+            }
+        ],
+        "FT_BD_CUSTORDERORG": [
+            {
+                "FEntryID": 0,
+                "FOrderOrgId": {
+                    "FNumber": ""
+                },
+                "FIsDefaultOrderOrg": "false"
+            }
+        ],
+        "FT_BD_CUSTSUBACCOUNT": [
+            {
+                "FEntryID": 0,
+                "FSUBACCOUNTTYPE": "",
+                "FSUBACCOUNT": ""
+            }
+        ],
+        "F_ora_Entity": [
+            {
+                "FEntryID": 0,
+                "F_ora_Text": "",
+                "F_ora_Base": {
+                    "FSTAFFNUMBER": ""
+                },
+                "F_UpdateUser": {
+                    "FUserID": ""
+                },
+                "F_UpdateDate": "1900-01-01",
+                "F_ora_Text1": ""
+            }
+        ],
+        "F_ora_Entity1": [
+            {
+                "FEntryID": 0,
+                "F_ora_Shareholdername": "",
+                "F_ora_percent": ""
+            }
+        ],
+        "F_ora_Nameofrelatedcompany": [
+            {
+                "FEntryID": 0,
+                "F_ora_companyname": ""
+            }
+        ],
+        "FCRMAllocation": [
+            {
+                "FCooperationType": "",
+                "FEmployee": {
+                    "FSTAFFNUMBER": ""
+                },
+                "FDept": {
+                    "FNUMBER": ""
+                },
+                "FRead": "false",
+                "FModify": "false",
+                "FDelete": "false",
+                "FAllocation": "false",
+                "FMerger": "false",
+                "FTrade": "false",
+                "FAllocUser": {
+                    "FUSERACCOUNT": ""
+                },
+                "FAllocTime": "1900-01-01"
+            }
+        ],
+        "FReleventCUST": [
+            {
+                "FEntryID": 0,
+                "FRelation": "",
+                "FRelaCustomer": {
+                    "FNUMBER": ""
+                },
+                "FRelaContact": {
+                    "FNUMBER": ""
+                },
+                "FRelaTel": "",
+                "FRelaRemark": ""
+            }
+        ]
+    }
+}
+
+五、字段说明：
+基本信息：FBillHead 
+	 实体主键：FCUSTID 
+	 单据状态：FDocumentStatus 
+	 禁用状态：FForbidStatus 
+	 客户名称：FName  (必填项)
+	 客户编码：FNumber 
+	 备注：FDescription 
+	 创建组织：FCreateOrgId  (必填项)
+	 使用组织：FUseOrgId 
+	 创建人：FCreatorId 
+	 修改人：FModifierId 
+	 创建日期：FCreateDate 
+	 修改日期：FModifyDate 
+	 简称(客户所属集团名称)：FShortName 
+	 国家：FCOUNTRY 
+	 地区：FPROVINCIAL 
+	 邮政编码：FZIP 
+	 联系电话：FTEL 
+	 纳税登记号：FTAXREGISTERCODE 
+	 传真：FFAX 
+	 对应集团客户：FGROUPCUSTID 
+	 对应供应商：FSUPPLIERID 
+	 结算币别：FTRADINGCURRID  (必填项)
+	 销售部门：FSALDEPTID 
+	 销售组：FSALGROUPID 
+	 销售员：FSELLER 
+	 运输提前期：FTRANSLEADTIME 
+	 价目表：FPRICELISTID 
+	 折扣表：FDISCOUNTLISTID 
+	 结算方式：FSETTLETYPEID 
+	 收款币别：FRECEIVECURRID 
+	 收款条件：FRECCONDITIONID 
+	 启用信用管理：FISCREDITCHECK 
+	 审核人：FAPPROVERID 
+	 审核日期：FAPPROVEDATE 
+	 禁用人：FFORBIDDERID 
+	 禁用日期：FFORBIDDATE 
+	 税分类：FTaxType 
+	 客户类别：FCustTypeId 
+	 通讯地址：FADDRESS 
+	 公司网址：FWEBSITE 
+	 客户分组：FGroup 
+	 公司规模：FCompanyScale 
+	 公司类别：FCompanyClassify 
+	 公司性质：FCompanyNature 
+	 对应组织：FCorrespondOrgId 
+	 客户优先级：FPriority 
+	 发票类型：FInvoiceType 
+	 默认税率：FTaxRate 
+	 默认付款方：FIsDefPayer 
+	 订货平台管理员：FCPAdminCode 
+	 集团客户：FIsGroup 
+	 发票抬头：FINVOICETITLE 
+	 开户银行：FINVOICEBANKNAME 
+	 银行账号：FINVOICEBANKACCOUNT 
+	 开票联系电话：FINVOICETEL 
+	 开票通讯地址：FINVOICEADDRESS 
+	 是否交易客户：FIsTrade 
+	 不校验可发量：FUncheckExpectQty 
+	 集团客户标识(仅用于审核操作功能的一个判断标识)：FIsGroupTag 
+	 法人代表：FLegalPerson 
+	 注册资本：FRegisterFund 
+	 创立日期：FFoundDate 
+	 行业：FDomains 
+	 统一社会信用代码：FSOCIALCRECODE 
+	 注册地址：FRegisterAddress 
+	 经营范围：FScope 
+	 贸易方式：F_PAEZ_Assistant 
+	 账套(MIS专用)：F_PAEZ_Assistant1 
+	 是否销售客户：F_PAEZ_CheckBox 
+	 内外销：F_PAEZ_Assistant2  (必填项)
+	 发展日期：F_FzDate  (必填项)
+	 是否宝安集团企业：F_ora_Combo  (必填项)
+	 信用额度：F_CreditLine 
+	 信用额度币别：F_XYcur 
+	 营业执照号：F_ora_licensenumber 
+	 成立日期：F_ora_Dateofestablishment 
+	 法定代表：F_ora_Legalrepresentative 
+	 集团人数：F_ora_Groupsize 
+	 员工规模：F_ora_Employeesize 
+	 注册资本：F_ora_Registeredcapita 
+	 实收资本：F_ora_Paidincapital 
+	 公司资产价值：F_ora_companyassets 
+	 集团资产价值：F_ora_Groupassetvalue 
+	 去年销售给客户（公司）：F_ORA_lastyearcompanies 
+	 去年销售给客户（集团）：F_ORA_lastyeargroups 
+	 预计购买：F_ora_Expectedpurchase 
+	 商业产品：F_ora_Commercialproducts 
+	 生产类别：F_ora_Productioncategory 
+	 集团董事电话：F_ora_directorphone 
+	 集团董事传真：F_ora_directorfax 
+	 集团董事邮箱：F_ora_directormail 
+	 集团董事名称：F_ora_directorname 
+	 是否报表VMI：FIsVMIReport 
+	 自动分配客户：F_AutoAllocate 
+	 销售员(应收预警邮箱发送)：F_RESP_XSY 
+	 销售经理(应收预警邮箱发送)：F_RESP_XSJL 
+	 销售经理：F_RESP_XSJLMC 
+	 销售员（应收预警）)：F_RESP_XSYMC 
+	 英文名称：F_ora_YWMC 
+	 IPE集团客户编码：F_ora_Text2 
+	 关联方简称：F_ora_Text_qtr 
+	 企业性质：F_Enterprise_nature  (必填项)
+	 上市企业：F_Listed_companies 
+联系人：FT_BD_CUSTLOCATION 
+	 实体主键： 
+	 默认：FISDEFAULT 
+	 联系人编码：FContactId 
+	 联系人名称：FCONTACT 
+	 职务：FJob 
+	 地点编码：FBIZLOCNUMBER 
+	 地点名称：FBIZLOCATION 
+	 办公电话：FOFFICEPHONE 
+	 移动电话：FMOBILEPHONE 
+	 邮箱：FContactEmail 
+	 传真：FFAX1 
+	 详细地址：FBizAddress 
+	 默认收货地址：FIsDefaultConsigneeCT 
+	 禁用状态：FForbidContactStatus 
+	 禁用人：FCTForbidderId 
+	 禁用日期：FCTForbidderDate 
+	 是否复制：FIsCopy 
+	 是否接收对账单：F_IPE_PAYTAX1 
+银行信息：FT_BD_CUSTBANK 
+	 实体主键：FENTRYID 
+	 银行账号：FBANKCODE 
+	 币别：FCURRENCYID 
+	 账户名称：FACCOUNTNAME 
+	 默认：FISDEFAULT1 
+	 开户国家：FCOUNTRY1 
+	 开户银行：FOPENBANKNAME 
+	 收款银行：FBankTypeRec 
+	 开户行地址：FOpenAddressRec 
+	 联行号：FCNAPS 
+	 网点名称：FTextBankDetail 
+	 银行网点：FBankDetail 
+地址信息：FT_BD_CUSTCONTACT 
+	 实体主键：FENTRYID 
+	 地点编码：FNUMBER1 
+	 地点名称：FNAME1 
+	 详细地址：FADDRESS1 
+	 运输提前期：FTRANSLEADTIME1 
+	 税率：FTAXRATE1 
+	 默认收货地址：FIsDefaultConsignee 
+	 默认开票地址：FIsDefaultSettle 
+	 默认付款地址：FIsDefaultPayer 
+	 固定电话：FTTel 
+	 电子邮箱：FEMail 
+	 启用：FIsUsed 
+	 联系人：FTContact 
+	 移动电话：FMOBILE 
+	 地址禁用状态：FLocationStatus 
+	 地址国家：F_ora_Assistant 
+	 地点英文名称：F_ora_ddywmc 
+订货组织：FT_BD_CUSTORDERORG 
+	 实体主键：FEntryID 
+	 订货组织：FOrderOrgId 
+	 默认：FIsDefaultOrderOrg 
+商务信息：FT_BD_CUSTOMEREXT 
+	 实体主键：FEntryId 
+	 启用商联在线：FEnableSL 
+	 冻结状态：FFreezeStatus 
+	 冻结范围：FFreezeLimit 
+	 冻结人：FFreezeOperator 
+	 冻结日期：FFreezeDate 
+	 省份：FPROVINCE 
+	 城市：FCITY 
+	 默认收货地点：FDefaultConsiLoc 
+	 默认开票地点：FDefaultSettleLoc 
+	 默认付款地点：FDefaultPayerLoc 
+	 默认联系人：FDefaultContact 
+	 保证金比例（%）：FMarginLevel 
+	 结算卡：FDebitCard 
+	 结算方：FSettleId 
+	 付款方：FChargeId 
+	 允许对接智慧订货：FALLOWJOINZHJ 
+	 联系人必录：FIsContractMustInPut 
+	 联系人数量：FContractCount 
+	 星辰组织：FStarOrgId 
+对应子账户信息：FT_BD_CUSTSUBACCOUNT 
+	 实体主键：FEntryID 
+	 子账户类型：FSUBACCOUNTTYPE 
+	 子账户号：FSUBACCOUNT 
+MIS修改记录：F_ora_Entity 
+	 实体主键：FEntryID 
+	 修改内容：F_ora_Text 
+	 申请人：F_ora_Base 
+	 备注：F_ora_Text1 
+	 修改人：F_UpdateUser 
+	 修改日期：F_UpdateDate 
+股东资料：F_ora_Entity1 
+	 实体主键：FEntryID 
+	 持股百分比：F_ora_percent 
+	 股东名称：F_ora_Shareholdername 
+相关公司名称：F_ora_Nameofrelatedcompany 
+	 实体主键：FEntryID 
+	 相关公司名称：F_ora_companyname 
+协作团队：FCRMAllocation 
+	 实体主键： 
+	 协作类型：FCooperationType 
+	 员工：FEmployee 
+	 部门：FDept 
+	 查看：FRead 
+	 修改：FModify 
+	 删除：FDelete 
+	 协作分配：FAllocation 
+	 客户合并：FMerger 
+	 转交易客户：FTrade 
+	 分配人：FAllocUser 
+	 分配时间：FAllocTime 
+CRM客户：FCRMCustomer 
+	 实体主键：FEntryId 
+	 最后接触时间：FLastContactDate 
+	 对应集团客户：FSUPERIORCUSTID 
+	 主联系人：FMainContact 
+	 电话：FPhone 
+	 源单类型：FSrcFormId 
+	 源单内码：FSrcId 
+	 本年收款金额：FYearReceive 
+	 累计收款金额：FTotalReceive 
+	 超期应收款：FExpireReceive 
+	 客户价值：FCUSTValue 
+	 客户类型：FCustType 
+	 本年订单金额：FYearOrder 
+	 累计订单金额：FTotalOrder 
+	 年平均订单额：FAverageOrder 
+	 本年出库金额：FYearOutStock 
+	 累计出库金额：FTotalOutStock 
+	 市场活动：FMARACTIVITYID 
+	 微信营销：FWeiXinMarketingId 
+相关客户：FReleventCUST 
+	 实体主键：FEntryID 
+	 客户关系：FRelation 
+	 相关客户：FRelaCustomer 
+	 客户联系人：FRelaContact 
+	 联系方式：FRelaTel 
+	 说明：FRelaRemark 
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 保存 (`Save`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     2.1.NeedUpDateFields：需要更新的字段，数组类型，格式：[key1,key2,...] （非必录）注（更新字段时Model数据包中必须设置内码，若更新单据体字段还需设置分录内码）
+     2.2.NeedReturnFields：需返回结果的字段集合，数组类型，格式：[key,entitykey.key,...]（非必录） 注（返回单据体字段格式：entitykey.key）
+     2.3.IsDeleteEntry：是否删除已存在的分录，布尔类型，默认true（非必录）
+     2.4.SubSystemId：表单所在的子系统内码，字符串类型（非必录）
+     2.5.IsVerifyBaseDataField：是否验证所有的基础资料有效性，布尔类，默认false（非必录）
+     2.6.IsEntryBatchFill：是否批量填充分录，默认true（非必录）
+     2.7.ValidateFlag：是否验证数据合法性标志，布尔类型，默认true（非必录）注（设为false时不对数据合法性进行校验）
+     2.8.NumberSearch：是否用编码搜索基础资料，布尔类型，默认true（非必录）
+     2.9.IsAutoAdjustField：是否自动调整JSON字段顺序，布尔类型，默认false（非必录）
+     2.10.InterationFlags：交互标志集合，字符串类型，分号分隔，格式："flag1;flag2;..."（非必录） 例如（允许负库存标识：STK_InvCheckResult）
+     2.11.IgnoreInterationFlag：是否允许忽略交互，布尔类型，默认true（非必录）
+     2.12.IsControlPrecision：是否控制精度，为true时对金额、单价和数量字段进行精度验证，默认false（非必录）
+     2.13.ValidateRepeatJson：校验Json数据包是否重复传入，一旦重复传入，接口调用失败，传true则启用校验，传false则不校验（非必录）
+     2.14.Model：表单数据包，JSON类型（必录）
+备注:
+1.示例Model数据包中字段顺序不建议改变，否则可能会有相互影响，如果出现字段值被覆盖或丢失，则可以尝试把字段顺序向后调整一下。
+2.示例Model数据包默认包含允许引入的字段，实际按需构建既可。
+3.如需创建关联关系，可参考https://club.kingdee.com/forum.php?mod=viewthread&tid=1394265 。
+4.对于重要API接口，应设置幂等性校验、设置对应候选键（唯一性字段）的唯一索引等防重调用机制，以防并发导致数据重复。
+
+二、返回结果：
+{"Result":{"ResponseStatus":{"ErrorCode":"","IsSuccess":"false","Errors":[{"FieldName":"","Message":"","DIndex":0}],"SuccessEntitys":[{"Id":"","Number":"","DIndex":0}],"SuccessMessages":[{"FieldName":"","Message":"","DIndex":0}],"MsgCode":""},"Id":"","Number":"","NeedReturnData":[{}]}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.Save("CRM_CUST","{"NeedUpDateFields":[],"NeedReturnFields":[],"IsDeleteEntry":"true","SubSystemId":"","IsVerifyBaseDataField":"false","IsEntryBatchFill":"true","ValidateFlag":"true","NumberSearch":"true","IsAutoAdjustField":"true","InterationFlags":"","IgnoreInterationFlag":"","IsControlPrecision":"false","ValidateRepeatJson":"true","Model":{"FCUSTID":0,"FCreateOrgId":{"FNumber":""},"FNumber":"","FUseOrgId":{"FNumber":""},"FName":"","FShortName":"","FCOUNTRY":{"FNumber":""},"FPROVINCIAL":{"FNumber":""},"FADDRESS":"","FZIP":"","FWEBSITE":"","FTEL":"","FFAX":"","FCompanyClassify":{"FNumber":""},"FCompanyNature":{"FNumber":""},"FCompanyScale":{"FNumber":""},"FINVOICETITLE":"","FTAXREGISTERCODE":"","FINVOICEBANKNAME":"","FINVOICEBANKACCOUNT":"","FINVOICETEL":"","FINVOICEADDRESS":"","FSUPPLIERID":{"FNumber":""},"FIsDefPayer":"false","FIsGroup":"false","FGROUPCUSTID":{"FNumber":""},"FCustTypeId":{"FNumber":""},"FGroup":{"FNUMBER":""},"FTRADINGCURRID":{"FNumber":""},"FCorrespondOrgId":{"FNumber":""},"FDescription":"","FSALGROUPID":{"FNumber":""},"FSETTLETYPEID":{"FNumber":""},"FRECCONDITIONID":{"FNumber":""},"FTRANSLEADTIME":0,"FPRICELISTID":{"FNumber":""},"FDISCOUNTLISTID":{"FNumber":""},"FTaxType":{"FNumber":""},"FInvoiceType":"","FRECEIVECURRID":{"FNumber":""},"FPriority":0,"FTaxRate":{"FNumber":""},"FISCREDITCHECK":"false","FIsTrade":"false","F_PAEZ_Assistant":{"FNumber":""},"FUncheckExpectQty":"false","F_PAEZ_Assistant1":{"FNumber":""},"F_PAEZ_CheckBox":"false","F_PAEZ_Assistant2":{"FNumber":""},"F_FzDate":"1900-01-01","FLegalPerson":"","F_ora_Combo":"","FRegisterFund":"","F_CreditLine":0,"F_XYcur":{"FNUMBER":""},"FFoundDate":"","FDomains":"","F_ora_licensenumber":"","F_ora_Dateofestablishment":"1900-01-01","FSOCIALCRECODE":"","F_ora_Legalrepresentative":"","FRegisterAddress":"","F_ora_Groupsize":"","F_ora_Employeesize":"","FScope":"","F_ora_Registeredcapita":"","F_ora_Paidincapital":"","F_ora_companyassets":"","F_ora_Groupassetvalue":"","F_ORA_lastyearcompanies":"","F_ORA_lastyeargroups":"","F_ora_directormail":"","F_ora_directorfax":"","F_ora_directorphone":"","F_ora_directorname":"","F_ora_Commercialproducts":"","F_ora_Expectedpurchase":"","F_ora_Productioncategory":"","FIsVMIReport":"false","F_AutoAllocate":"false","F_RESP_XSY":[{"FStaffNumber":""}],"F_RESP_XSJL":[{"FStaffNumber":""}],"F_RESP_XSJLMC":"","F_RESP_XSYMC":"","F_ora_YWMC":"","F_ora_Text2":"","F_ora_Text_qtr":"","F_Enterprise_nature":"","F_Listed_companies":"","FT_BD_CUSTOMEREXT":{"FEntryId":0,"FEnableSL":"false","FFreezeLimit":"","FFreezeOperator":{"FUserID":""},"FFreezeDate":"1900-01-01","FPROVINCE":{"FNumber":""},"FCITY":{"FNumber":""},"FDefaultConsiLoc":{"FNUMBER":""},"FDefaultSettleLoc":{"FNUMBER":""},"FDefaultPayerLoc":{"FNUMBER":""},"FDefaultContact":{"FNUMBER":""},"FMarginLevel":0,"FDebitCard":"","FSettleId":{"FNUMBER":""},"FChargeId":{"FNUMBER":""},"FALLOWJOINZHJ":"false","FStarOrgId":{"FNUMBER":""}},"FCRMCustomer":{"FEntryId":0,"FSUPERIORCUSTID":{"FNUMBER":""},"FLastContactDate":"1900-01-01","FYearReceive":0,"FTotalReceive":0,"FExpireReceive":0,"FSrcId":0,"FSrcFormId":"","FMainContact":"","FPhone":"","FCUSTValue":"","FCustType":{"FNumber":""},"FYearOrder":0,"FTotalOrder":0,"FAverageOrder":0,"FYearOutStock":0,"FTotalOutStock":0,"FMARACTIVITYID":{"FBILLNO":""},"FWeiXinMarketingId":{"FBILLNO":""}},"FT_BD_CUSTLOCATION":[{"FContactId":{"FNUMBER":""},"FISDEFAULT":"false","FIsDefaultConsigneeCT":"false","FIsCopy":"false"}],"FT_BD_CUSTBANK":[{"FENTRYID":0,"FCOUNTRY1":{"FNumber":""},"FBANKCODE":"","FACCOUNTNAME":"","FBankTypeRec":{"FNUMBER":""},"FTextBankDetail":"","FBankDetail":{"FNUMBER":""},"FOPENBANKNAME":"","FOpenAddressRec":"","FCNAPS":"","FCURRENCYID":{"FNumber":""},"FISDEFAULT1":"false"}],"FT_BD_CUSTCONTACT":[{"FENTRYID":0,"FNUMBER1":"","FNAME1":"","FADDRESS1":"","FTRANSLEADTIME1":0,"FMOBILE":"","FIsDefaultConsignee":"false","FIsDefaultSettle":"false","FIsDefaultPayer":"false","FIsUsed":"false","F_ora_Assistant":{"FNumber":""},"F_ora_ddywmc":""}],"FT_BD_CUSTORDERORG":[{"FEntryID":0,"FOrderOrgId":{"FNumber":""},"FIsDefaultOrderOrg":"false"}],"FT_BD_CUSTSUBACCOUNT":[{"FEntryID":0,"FSUBACCOUNTTYPE":"","FSUBACCOUNT":""}],"F_ora_Entity":[{"FEntryID":0,"F_ora_Text":"","F_ora_Base":{"FSTAFFNUMBER":""},"F_UpdateUser":{"FUserID":""},"F_UpdateDate":"1900-01-01","F_ora_Text1":""}],"F_ora_Entity1":[{"FEntryID":0,"F_ora_Shareholdername":"","F_ora_percent":""}],"F_ora_Nameofrelatedcompany":[{"FEntryID":0,"F_ora_companyname":""}],"FCRMAllocation":[{"FCooperationType":"","FEmployee":{"FSTAFFNUMBER":""},"FDept":{"FNUMBER":""},"FRead":"false","FModify":"false","FDelete":"false","FAllocation":"false","FMerger":"false","FTrade":"false","FAllocUser":{"FUSERACCOUNT":""},"FAllocTime":"1900-01-01"}],"FReleventCUST":[{"FEntryID":0,"FRelation":"","FRelaCustomer":{"FNUMBER":""},"FRelaContact":{"FNUMBER":""},"FRelaTel":"","FRelaRemark":""}]}}");
+
+四、JSON格式数据：
+{
+    "NeedUpDateFields": [],
+    "NeedReturnFields": [],
+    "IsDeleteEntry": "true",
+    "SubSystemId": "",
+    "IsVerifyBaseDataField": "false",
+    "IsEntryBatchFill": "true",
+    "ValidateFlag": "true",
+    "NumberSearch": "true",
+    "IsAutoAdjustField": "true",
+    "InterationFlags": "",
+    "IgnoreInterationFlag": "",
+    "IsControlPrecision": "false",
+    "ValidateRepeatJson": "true",
+    "Model": {
+        "FCUSTID": 0,
+        "FCreateOrgId": {
+            "FNumber": ""
+        },
+        "FNumber": "",
+        "FUseOrgId": {
+            "FNumber": ""
+        },
+        "FName": "",
+        "FShortName": "",
+        "FCOUNTRY": {
+            "FNumber": ""
+        },
+        "FPROVINCIAL": {
+            "FNumber": ""
+        },
+        "FADDRESS": "",
+        "FZIP": "",
+        "FWEBSITE": "",
+        "FTEL": "",
+        "FFAX": "",
+        "FCompanyClassify": {
+            "FNumber": ""
+        },
+        "FCompanyNature": {
+            "FNumber": ""
+        },
+        "FCompanyScale": {
+            "FNumber": ""
+        },
+        "FINVOICETITLE": "",
+        "FTAXREGISTERCODE": "",
+        "FINVOICEBANKNAME": "",
+        "FINVOICEBANKACCOUNT": "",
+        "FINVOICETEL": "",
+        "FINVOICEADDRESS": "",
+        "FSUPPLIERID": {
+            "FNumber": ""
+        },
+        "FIsDefPayer": "false",
+        "FIsGroup": "false",
+        "FGROUPCUSTID": {
+            "FNumber": ""
+        },
+        "FCustTypeId": {
+            "FNumber": ""
+        },
+        "FGroup": {
+            "FNUMBER": ""
+        },
+        "FTRADINGCURRID": {
+            "FNumber": ""
+        },
+        "FCorrespondOrgId": {
+            "FNumber": ""
+        },
+        "FDescription": "",
+        "FSALGROUPID": {
+            "FNumber": ""
+        },
+        "FSETTLETYPEID": {
+            "FNumber": ""
+        },
+        "FRECCONDITIONID": {
+            "FNumber": ""
+        },
+        "FTRANSLEADTIME": 0,
+        "FPRICELISTID": {
+            "FNumber": ""
+        },
+        "FDISCOUNTLISTID": {
+            "FNumber": ""
+        },
+        "FTaxType": {
+            "FNumber": ""
+        },
+        "FInvoiceType": "",
+        "FRECEIVECURRID": {
+            "FNumber": ""
+        },
+        "FPriority": 0,
+        "FTaxRate": {
+            "FNumber": ""
+        },
+        "FISCREDITCHECK": "false",
+        "FIsTrade": "false",
+        "F_PAEZ_Assistant": {
+            "FNumber": ""
+        },
+        "FUncheckExpectQty": "false",
+        "F_PAEZ_Assistant1": {
+            "FNumber": ""
+        },
+        "F_PAEZ_CheckBox": "false",
+        "F_PAEZ_Assistant2": {
+            "FNumber": ""
+        },
+        "F_FzDate": "1900-01-01",
+        "FLegalPerson": "",
+        "F_ora_Combo": "",
+        "FRegisterFund": "",
+        "F_CreditLine": 0,
+        "F_XYcur": {
+            "FNUMBER": ""
+        },
+        "FFoundDate": "",
+        "FDomains": "",
+        "F_ora_licensenumber": "",
+        "F_ora_Dateofestablishment": "1900-01-01",
+        "FSOCIALCRECODE": "",
+        "F_ora_Legalrepresentative": "",
+        "FRegisterAddress": "",
+        "F_ora_Groupsize": "",
+        "F_ora_Employeesize": "",
+        "FScope": "",
+        "F_ora_Registeredcapita": "",
+        "F_ora_Paidincapital": "",
+        "F_ora_companyassets": "",
+        "F_ora_Groupassetvalue": "",
+        "F_ORA_lastyearcompanies": "",
+        "F_ORA_lastyeargroups": "",
+        "F_ora_directormail": "",
+        "F_ora_directorfax": "",
+        "F_ora_directorphone": "",
+        "F_ora_directorname": "",
+        "F_ora_Commercialproducts": "",
+        "F_ora_Expectedpurchase": "",
+        "F_ora_Productioncategory": "",
+        "FIsVMIReport": "false",
+        "F_AutoAllocate": "false",
+        "F_RESP_XSY": [
+            {
+                "FStaffNumber": ""
+            }
+        ],
+        "F_RESP_XSJL": [
+            {
+                "FStaffNumber": ""
+            }
+        ],
+        "F_RESP_XSJLMC": "",
+        "F_RESP_XSYMC": "",
+        "F_ora_YWMC": "",
+        "F_ora_Text2": "",
+        "F_ora_Text_qtr": "",
+        "F_Enterprise_nature": "",
+        "F_Listed_companies": "",
+        "FT_BD_CUSTOMEREXT": {
+            "FEntryId": 0,
+            "FEnableSL": "false",
+            "FFreezeLimit": "",
+            "FFreezeOperator": {
+                "FUserID": ""
+            },
+            "FFreezeDate": "1900-01-01",
+            "FPROVINCE": {
+                "FNumber": ""
+            },
+            "FCITY": {
+                "FNumber": ""
+            },
+            "FDefaultConsiLoc": {
+                "FNUMBER": ""
+            },
+            "FDefaultSettleLoc": {
+                "FNUMBER": ""
+            },
+            "FDefaultPayerLoc": {
+                "FNUMBER": ""
+            },
+            "FDefaultContact": {
+                "FNUMBER": ""
+            },
+            "FMarginLevel": 0,
+            "FDebitCard": "",
+            "FSettleId": {
+                "FNUMBER": ""
+            },
+            "FChargeId": {
+                "FNUMBER": ""
+            },
+            "FALLOWJOINZHJ": "false",
+            "FStarOrgId": {
+                "FNUMBER": ""
+            }
+        },
+        "FCRMCustomer": {
+            "FEntryId": 0,
+            "FSUPERIORCUSTID": {
+                "FNUMBER": ""
+            },
+            "FLastContactDate": "1900-01-01",
+            "FYearReceive": 0,
+            "FTotalReceive": 0,
+            "FExpireReceive": 0,
+            "FSrcId": 0,
+            "FSrcFormId": "",
+            "FMainContact": "",
+            "FPhone": "",
+            "FCUSTValue": "",
+            "FCustType": {
+                "FNumber": ""
+            },
+            "FYearOrder": 0,
+            "FTotalOrder": 0,
+            "FAverageOrder": 0,
+            "FYearOutStock": 0,
+            "FTotalOutStock": 0,
+            "FMARACTIVITYID": {
+                "FBILLNO": ""
+            },
+            "FWeiXinMarketingId": {
+                "FBILLNO": ""
+            }
+        },
+        "FT_BD_CUSTLOCATION": [
+            {
+                "FContactId": {
+                    "FNUMBER": ""
+                },
+                "FISDEFAULT": "false",
+                "FIsDefaultConsigneeCT": "false",
+                "FIsCopy": "false"
+            }
+        ],
+        "FT_BD_CUSTBANK": [
+            {
+                "FENTRYID": 0,
+                "FCOUNTRY1": {
+                    "FNumber": ""
+                },
+                "FBANKCODE": "",
+                "FACCOUNTNAME": "",
+                "FBankTypeRec": {
+                    "FNUMBER": ""
+                },
+                "FTextBankDetail": "",
+                "FBankDetail": {
+                    "FNUMBER": ""
+                },
+                "FOPENBANKNAME": "",
+                "FOpenAddressRec": "",
+                "FCNAPS": "",
+                "FCURRENCYID": {
+                    "FNumber": ""
+                },
+                "FISDEFAULT1": "false"
+            }
+        ],
+        "FT_BD_CUSTCONTACT": [
+            {
+                "FENTRYID": 0,
+                "FNUMBER1": "",
+                "FNAME1": "",
+                "FADDRESS1": "",
+                "FTRANSLEADTIME1": 0,
+                "FMOBILE": "",
+                "FIsDefaultConsignee": "false",
+                "FIsDefaultSettle": "false",
+                "FIsDefaultPayer": "false",
+                "FIsUsed": "false",
+                "F_ora_Assistant": {
+                    "FNumber": ""
+                },
+                "F_ora_ddywmc": ""
+            }
+        ],
+        "FT_BD_CUSTORDERORG": [
+            {
+                "FEntryID": 0,
+                "FOrderOrgId": {
+                    "FNumber": ""
+                },
+                "FIsDefaultOrderOrg": "false"
+            }
+        ],
+        "FT_BD_CUSTSUBACCOUNT": [
+            {
+                "FEntryID": 0,
+                "FSUBACCOUNTTYPE": "",
+                "FSUBACCOUNT": ""
+            }
+        ],
+        "F_ora_Entity": [
+            {
+                "FEntryID": 0,
+                "F_ora_Text": "",
+                "F_ora_Base": {
+                    "FSTAFFNUMBER": ""
+                },
+                "F_UpdateUser": {
+                    "FUserID": ""
+                },
+                "F_UpdateDate": "1900-01-01",
+                "F_ora_Text1": ""
+            }
+        ],
+        "F_ora_Entity1": [
+            {
+                "FEntryID": 0,
+                "F_ora_Shareholdername": "",
+                "F_ora_percent": ""
+            }
+        ],
+        "F_ora_Nameofrelatedcompany": [
+            {
+                "FEntryID": 0,
+                "F_ora_companyname": ""
+            }
+        ],
+        "FCRMAllocation": [
+            {
+                "FCooperationType": "",
+                "FEmployee": {
+                    "FSTAFFNUMBER": ""
+                },
+                "FDept": {
+                    "FNUMBER": ""
+                },
+                "FRead": "false",
+                "FModify": "false",
+                "FDelete": "false",
+                "FAllocation": "false",
+                "FMerger": "false",
+                "FTrade": "false",
+                "FAllocUser": {
+                    "FUSERACCOUNT": ""
+                },
+                "FAllocTime": "1900-01-01"
+            }
+        ],
+        "FReleventCUST": [
+            {
+                "FEntryID": 0,
+                "FRelation": "",
+                "FRelaCustomer": {
+                    "FNUMBER": ""
+                },
+                "FRelaContact": {
+                    "FNUMBER": ""
+                },
+                "FRelaTel": "",
+                "FRelaRemark": ""
+            }
+        ]
+    }
+}
+
+五、字段说明：
+基本信息：FBillHead 
+	 实体主键：FCUSTID 
+	 单据状态：FDocumentStatus 
+	 禁用状态：FForbidStatus 
+	 客户名称：FName  (必填项)
+	 客户编码：FNumber 
+	 备注：FDescription 
+	 创建组织：FCreateOrgId  (必填项)
+	 使用组织：FUseOrgId 
+	 创建人：FCreatorId 
+	 修改人：FModifierId 
+	 创建日期：FCreateDate 
+	 修改日期：FModifyDate 
+	 简称(客户所属集团名称)：FShortName 
+	 国家：FCOUNTRY 
+	 地区：FPROVINCIAL 
+	 邮政编码：FZIP 
+	 联系电话：FTEL 
+	 纳税登记号：FTAXREGISTERCODE 
+	 传真：FFAX 
+	 对应集团客户：FGROUPCUSTID 
+	 对应供应商：FSUPPLIERID 
+	 结算币别：FTRADINGCURRID  (必填项)
+	 销售部门：FSALDEPTID 
+	 销售组：FSALGROUPID 
+	 销售员：FSELLER 
+	 运输提前期：FTRANSLEADTIME 
+	 价目表：FPRICELISTID 
+	 折扣表：FDISCOUNTLISTID 
+	 结算方式：FSETTLETYPEID 
+	 收款币别：FRECEIVECURRID 
+	 收款条件：FRECCONDITIONID 
+	 启用信用管理：FISCREDITCHECK 
+	 审核人：FAPPROVERID 
+	 审核日期：FAPPROVEDATE 
+	 禁用人：FFORBIDDERID 
+	 禁用日期：FFORBIDDATE 
+	 税分类：FTaxType 
+	 客户类别：FCustTypeId 
+	 通讯地址：FADDRESS 
+	 公司网址：FWEBSITE 
+	 客户分组：FGroup 
+	 公司规模：FCompanyScale 
+	 公司类别：FCompanyClassify 
+	 公司性质：FCompanyNature 
+	 对应组织：FCorrespondOrgId 
+	 客户优先级：FPriority 
+	 发票类型：FInvoiceType 
+	 默认税率：FTaxRate 
+	 默认付款方：FIsDefPayer 
+	 订货平台管理员：FCPAdminCode 
+	 集团客户：FIsGroup 
+	 发票抬头：FINVOICETITLE 
+	 开户银行：FINVOICEBANKNAME 
+	 银行账号：FINVOICEBANKACCOUNT 
+	 开票联系电话：FINVOICETEL 
+	 开票通讯地址：FINVOICEADDRESS 
+	 是否交易客户：FIsTrade 
+	 不校验可发量：FUncheckExpectQty 
+	 集团客户标识(仅用于审核操作功能的一个判断标识)：FIsGroupTag 
+	 法人代表：FLegalPerson 
+	 注册资本：FRegisterFund 
+	 创立日期：FFoundDate 
+	 行业：FDomains 
+	 统一社会信用代码：FSOCIALCRECODE 
+	 注册地址：FRegisterAddress 
+	 经营范围：FScope 
+	 贸易方式：F_PAEZ_Assistant 
+	 账套(MIS专用)：F_PAEZ_Assistant1 
+	 是否销售客户：F_PAEZ_CheckBox 
+	 内外销：F_PAEZ_Assistant2  (必填项)
+	 发展日期：F_FzDate  (必填项)
+	 是否宝安集团企业：F_ora_Combo  (必填项)
+	 信用额度：F_CreditLine 
+	 信用额度币别：F_XYcur 
+	 营业执照号：F_ora_licensenumber 
+	 成立日期：F_ora_Dateofestablishment 
+	 法定代表：F_ora_Legalrepresentative 
+	 集团人数：F_ora_Groupsize 
+	 员工规模：F_ora_Employeesize 
+	 注册资本：F_ora_Registeredcapita 
+	 实收资本：F_ora_Paidincapital 
+	 公司资产价值：F_ora_companyassets 
+	 集团资产价值：F_ora_Groupassetvalue 
+	 去年销售给客户（公司）：F_ORA_lastyearcompanies 
+	 去年销售给客户（集团）：F_ORA_lastyeargroups 
+	 预计购买：F_ora_Expectedpurchase 
+	 商业产品：F_ora_Commercialproducts 
+	 生产类别：F_ora_Productioncategory 
+	 集团董事电话：F_ora_directorphone 
+	 集团董事传真：F_ora_directorfax 
+	 集团董事邮箱：F_ora_directormail 
+	 集团董事名称：F_ora_directorname 
+	 是否报表VMI：FIsVMIReport 
+	 自动分配客户：F_AutoAllocate 
+	 销售员(应收预警邮箱发送)：F_RESP_XSY 
+	 销售经理(应收预警邮箱发送)：F_RESP_XSJL 
+	 销售经理：F_RESP_XSJLMC 
+	 销售员（应收预警）)：F_RESP_XSYMC 
+	 英文名称：F_ora_YWMC 
+	 IPE集团客户编码：F_ora_Text2 
+	 关联方简称：F_ora_Text_qtr 
+	 企业性质：F_Enterprise_nature  (必填项)
+	 上市企业：F_Listed_companies 
+联系人：FT_BD_CUSTLOCATION 
+	 实体主键： 
+	 默认：FISDEFAULT 
+	 联系人编码：FContactId 
+	 联系人名称：FCONTACT 
+	 职务：FJob 
+	 地点编码：FBIZLOCNUMBER 
+	 地点名称：FBIZLOCATION 
+	 办公电话：FOFFICEPHONE 
+	 移动电话：FMOBILEPHONE 
+	 邮箱：FContactEmail 
+	 传真：FFAX1 
+	 详细地址：FBizAddress 
+	 默认收货地址：FIsDefaultConsigneeCT 
+	 禁用状态：FForbidContactStatus 
+	 禁用人：FCTForbidderId 
+	 禁用日期：FCTForbidderDate 
+	 是否复制：FIsCopy 
+	 是否接收对账单：F_IPE_PAYTAX1 
+银行信息：FT_BD_CUSTBANK 
+	 实体主键：FENTRYID 
+	 银行账号：FBANKCODE 
+	 币别：FCURRENCYID 
+	 账户名称：FACCOUNTNAME 
+	 默认：FISDEFAULT1 
+	 开户国家：FCOUNTRY1 
+	 开户银行：FOPENBANKNAME 
+	 收款银行：FBankTypeRec 
+	 开户行地址：FOpenAddressRec 
+	 联行号：FCNAPS 
+	 网点名称：FTextBankDetail 
+	 银行网点：FBankDetail 
+地址信息：FT_BD_CUSTCONTACT 
+	 实体主键：FENTRYID 
+	 地点编码：FNUMBER1 
+	 地点名称：FNAME1 
+	 详细地址：FADDRESS1 
+	 运输提前期：FTRANSLEADTIME1 
+	 税率：FTAXRATE1 
+	 默认收货地址：FIsDefaultConsignee 
+	 默认开票地址：FIsDefaultSettle 
+	 默认付款地址：FIsDefaultPayer 
+	 固定电话：FTTel 
+	 电子邮箱：FEMail 
+	 启用：FIsUsed 
+	 联系人：FTContact 
+	 移动电话：FMOBILE 
+	 地址禁用状态：FLocationStatus 
+	 地址国家：F_ora_Assistant 
+	 地点英文名称：F_ora_ddywmc 
+订货组织：FT_BD_CUSTORDERORG 
+	 实体主键：FEntryID 
+	 订货组织：FOrderOrgId 
+	 默认：FIsDefaultOrderOrg 
+商务信息：FT_BD_CUSTOMEREXT 
+	 实体主键：FEntryId 
+	 启用商联在线：FEnableSL 
+	 冻结状态：FFreezeStatus 
+	 冻结范围：FFreezeLimit 
+	 冻结人：FFreezeOperator 
+	 冻结日期：FFreezeDate 
+	 省份：FPROVINCE 
+	 城市：FCITY 
+	 默认收货地点：FDefaultConsiLoc 
+	 默认开票地点：FDefaultSettleLoc 
+	 默认付款地点：FDefaultPayerLoc 
+	 默认联系人：FDefaultContact 
+	 保证金比例（%）：FMarginLevel 
+	 结算卡：FDebitCard 
+	 结算方：FSettleId 
+	 付款方：FChargeId 
+	 允许对接智慧订货：FALLOWJOINZHJ 
+	 联系人必录：FIsContractMustInPut 
+	 联系人数量：FContractCount 
+	 星辰组织：FStarOrgId 
+对应子账户信息：FT_BD_CUSTSUBACCOUNT 
+	 实体主键：FEntryID 
+	 子账户类型：FSUBACCOUNTTYPE 
+	 子账户号：FSUBACCOUNT 
+MIS修改记录：F_ora_Entity 
+	 实体主键：FEntryID 
+	 修改内容：F_ora_Text 
+	 申请人：F_ora_Base 
+	 备注：F_ora_Text1 
+	 修改人：F_UpdateUser 
+	 修改日期：F_UpdateDate 
+股东资料：F_ora_Entity1 
+	 实体主键：FEntryID 
+	 持股百分比：F_ora_percent 
+	 股东名称：F_ora_Shareholdername 
+相关公司名称：F_ora_Nameofrelatedcompany 
+	 实体主键：FEntryID 
+	 相关公司名称：F_ora_companyname 
+协作团队：FCRMAllocation 
+	 实体主键： 
+	 协作类型：FCooperationType 
+	 员工：FEmployee 
+	 部门：FDept 
+	 查看：FRead 
+	 修改：FModify 
+	 删除：FDelete 
+	 协作分配：FAllocation 
+	 客户合并：FMerger 
+	 转交易客户：FTrade 
+	 分配人：FAllocUser 
+	 分配时间：FAllocTime 
+CRM客户：FCRMCustomer 
+	 实体主键：FEntryId 
+	 最后接触时间：FLastContactDate 
+	 对应集团客户：FSUPERIORCUSTID 
+	 主联系人：FMainContact 
+	 电话：FPhone 
+	 源单类型：FSrcFormId 
+	 源单内码：FSrcId 
+	 本年收款金额：FYearReceive 
+	 累计收款金额：FTotalReceive 
+	 超期应收款：FExpireReceive 
+	 客户价值：FCUSTValue 
+	 客户类型：FCustType 
+	 本年订单金额：FYearOrder 
+	 累计订单金额：FTotalOrder 
+	 年平均订单额：FAverageOrder 
+	 本年出库金额：FYearOutStock 
+	 累计出库金额：FTotalOutStock 
+	 市场活动：FMARACTIVITYID 
+	 微信营销：FWeiXinMarketingId 
+相关客户：FReleventCUST 
+	 实体主键：FEntryID 
+	 客户关系：FRelation 
+	 相关客户：FRelaCustomer 
+	 客户联系人：FRelaContact 
+	 联系方式：FRelaTel 
+	 说明：FRelaRemark 
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 提交 (`Submit`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     2.1.CreateOrgId：创建者组织内码（非必录）
+     2.2.Numbers：单据编码集合，数组类型，格式：[No1,No2,...]（使用编码时必录）
+     2.3.Ids：单据内码集合，字符串类型，格式："Id1,Id2,..."（使用内码时必录）
+     2.4.SelectedPostId：工作流发起员工岗位内码，整型（非必录） 注（员工身兼多岗时不传参默认取第一个岗位）
+     2.5.UseOrgId：使用者组织内码（非必录）
+     2.6.NetworkCtrl：是否启用网控，布尔类型，默认false（非必录）
+     2.7.IgnoreInterationFlag：是否允许忽略交互，布尔类型，默认true（非必录）
+
+二、返回结果：
+{"Result":{"ResponseStatus":{"ErrorCode":"","IsSuccess":"false","Errors":[{"FieldName":"","Message":"","DIndex":0}],"SuccessEntitys":[{"Id":"","Number":"","DIndex":0}],"SuccessMessages":[{"FieldName":"","Message":"","DIndex":0}],"MsgCode":""}}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.Submit("CRM_CUST","{"CreateOrgId":0,"Numbers":[],"Ids":"","SelectedPostId":0,"UseOrgId":0,"NetworkCtrl":"","IgnoreInterationFlag":""}");
+
+四、JSON格式数据：
+{
+    "CreateOrgId": 0,
+    "Numbers": [],
+    "Ids": "",
+    "SelectedPostId": 0,
+    "UseOrgId": 0,
+    "NetworkCtrl": "",
+    "IgnoreInterationFlag": ""
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 审核 (`Audit`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     2.1.CreateOrgId：创建者组织内码（非必录）
+     2.2.Numbers：单据编码集合，数组类型，格式：[No1,No2,...]（使用编码时必录）
+     2.3.Ids：单据内码集合，字符串类型，格式："Id1,Id2,..."（使用内码时必录）
+     2.4.InterationFlags：交互标志集合，字符串类型，分号分隔，格式："flag1;flag2;..."（非必录） 例如（允许负库存标识：STK_InvCheckResult）
+     2.5.UseOrgId：使用者组织内码（非必录）
+     2.6.NetworkCtrl：是否启用网控，布尔类型，默认false（非必录）
+     2.7.IsVerifyProcInst：是否检验单据关联运行中的工作流实例，布尔类型，默认true（非必录）
+     2.8.IgnoreInterationFlag：是否允许忽略交互，布尔类型，默认true（非必录）
+     2.9.UseBatControlTimes：是否应用单据参数设置分批处理，默认false
+
+二、返回结果：
+{"Result":{"ResponseStatus":{"ErrorCode":"","IsSuccess":"false","Errors":[{"FieldName":"","Message":"","DIndex":0}],"SuccessEntitys":[{"Id":"","Number":"","DIndex":0}],"SuccessMessages":[{"FieldName":"","Message":"","DIndex":0}],"MsgCode":""}}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.Audit("CRM_CUST","{"CreateOrgId":0,"Numbers":[],"Ids":"","InterationFlags":"","UseOrgId":0,"NetworkCtrl":"","IsVerifyProcInst":"true","IgnoreInterationFlag":"","UseBatControlTimes":"false"}");
+
+四、JSON格式数据：
+{
+    "CreateOrgId": 0,
+    "Numbers": [],
+    "Ids": "",
+    "InterationFlags": "",
+    "UseOrgId": 0,
+    "NetworkCtrl": "",
+    "IsVerifyProcInst": "true",
+    "IgnoreInterationFlag": "",
+    "UseBatControlTimes": "false"
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 反审核 (`UnAudit`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     2.1.CreateOrgId：创建者组织内码（非必录）
+     2.2.Numbers：单据编码集合，数组类型，格式：[No1,No2,...]（使用编码时必录）
+     2.3.Ids：单据内码集合，字符串类型，格式："Id1,Id2,..."（使用内码时必录）
+     2.4.InterationFlags：交互标志集合，字符串类型，分号分隔，格式："flag1;flag2;..."（非必录） 例如（允许负库存标识：STK_InvCheckResult）
+     2.5.IgnoreInterationFlag：是否允许忽略交互，布尔类型，默认true（非必录）
+     2.6.UseOrgId：使用者组织内码（非必录）
+     2.7.NetworkCtrl：是否启用网控，布尔类型，默认false（非必录）
+     2.8.IsVerifyProcInst：是否检验单据关联运行中的工作流实例，布尔类型，默认true（非必录）
+
+二、返回结果：
+{"Result":{"ResponseStatus":{"ErrorCode":"","IsSuccess":"false","Errors":[{"FieldName":"","Message":"","DIndex":0}],"SuccessEntitys":[{"Id":"","Number":"","DIndex":0}],"SuccessMessages":[{"FieldName":"","Message":"","DIndex":0}],"MsgCode":""}}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.UnAudit("CRM_CUST","{"CreateOrgId":0,"Numbers":[],"Ids":"","InterationFlags":"","IgnoreInterationFlag":"","UseOrgId":0,"NetworkCtrl":"","IsVerifyProcInst":"true"}");
+
+四、JSON格式数据：
+{
+    "CreateOrgId": 0,
+    "Numbers": [],
+    "Ids": "",
+    "InterationFlags": "",
+    "IgnoreInterationFlag": "",
+    "UseOrgId": 0,
+    "NetworkCtrl": "",
+    "IsVerifyProcInst": "true"
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 禁用 (`Forbid`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.opNumber：操作编码，字符串类型（必录）
+3.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     3.1.CreateOrgId：创建者组织内码（非必录）
+     3.2.Numbers：单据编码集合，数组类型，格式：[No1,No2,...]（使用编码时必录）
+     3.3.Ids：单据内码集合，字符串类型，格式："Id1,Id2,..."（使用内码时必录）
+     3.4.PkEntryIds：单据内码与分录内码对应关系的集合，字符串类型，格式：[{"Id":"Id1","EntryIds":"EntryId1,EntryId2,..."}] (使用分录状态转换时必录)
+     3.5.UseOrgId：使用者组织内码（非必录）
+     3.6.NetworkCtrl：是否启用网控，布尔类型，默认false（非必录）
+     3.7.IgnoreInterationFlag：是否允许忽略交互，布尔类型，默认true（非必录）
+
+二、返回结果：
+{"Result":{"ResponseStatus":{"ErrorCode":"","IsSuccess":"false","Errors":[{"FieldName":"","Message":"","DIndex":0}],"SuccessEntitys":[{"Id":"","Number":"","DIndex":0}],"SuccessMessages":[{"FieldName":"","Message":"","DIndex":0}],"MsgCode":""}}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.ExcuteOperation("CRM_CUST","Forbid","{"CreateOrgId":0,"Numbers":[],"Ids":"","PkEntryIds":[],"UseOrgId":0,"NetworkCtrl":"","IgnoreInterationFlag":""}");
+
+四、JSON格式数据：
+{
+    "CreateOrgId": 0,
+    "Numbers": [],
+    "Ids": "",
+    "PkEntryIds": [],
+    "UseOrgId": 0,
+    "NetworkCtrl": "",
+    "IgnoreInterationFlag": ""
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 反禁用 (`Enable`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.opNumber：操作编码，字符串类型（必录）
+3.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     3.1.CreateOrgId：创建者组织内码（非必录）
+     3.2.Numbers：单据编码集合，数组类型，格式：[No1,No2,...]（使用编码时必录）
+     3.3.Ids：单据内码集合，字符串类型，格式："Id1,Id2,..."（使用内码时必录）
+     3.4.PkEntryIds：单据内码与分录内码对应关系的集合，字符串类型，格式：[{"Id":"Id1","EntryIds":"EntryId1,EntryId2,..."}] (使用分录状态转换时必录)
+     3.5.UseOrgId：使用者组织内码（非必录）
+     3.6.NetworkCtrl：是否启用网控，布尔类型，默认false（非必录）
+     3.7.IgnoreInterationFlag：是否允许忽略交互，布尔类型，默认true（非必录）
+
+二、返回结果：
+{"Result":{"ResponseStatus":{"ErrorCode":"","IsSuccess":"false","Errors":[{"FieldName":"","Message":"","DIndex":0}],"SuccessEntitys":[{"Id":"","Number":"","DIndex":0}],"SuccessMessages":[{"FieldName":"","Message":"","DIndex":0}],"MsgCode":""}}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.ExcuteOperation("CRM_CUST","Enable","{"CreateOrgId":0,"Numbers":[],"Ids":"","PkEntryIds":[],"UseOrgId":0,"NetworkCtrl":"","IgnoreInterationFlag":""}");
+
+四、JSON格式数据：
+{
+    "CreateOrgId": 0,
+    "Numbers": [],
+    "Ids": "",
+    "PkEntryIds": [],
+    "UseOrgId": 0,
+    "NetworkCtrl": "",
+    "IgnoreInterationFlag": ""
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 撤销 (`CancelAssign`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     2.1.CreateOrgId：创建者组织内码（非必录）
+     2.2.Numbers：单据编码集合，数组类型，格式：[No1,No2,...]（使用编码时必录）
+     2.3.Ids：单据内码集合，字符串类型，格式："Id1,Id2,..."（使用内码时必录）
+     2.4.UseOrgId：使用者组织内码（非必录）
+     2.5.NetworkCtrl：是否启用网控，布尔类型，默认false（非必录）
+
+二、返回结果：
+{"Result":{"ResponseStatus":{"ErrorCode":"","IsSuccess":"false","Errors":[{"FieldName":"","Message":"","DIndex":0}],"SuccessEntitys":[{"Id":"","Number":"","DIndex":0}],"SuccessMessages":[{"FieldName":"","Message":"","DIndex":0}],"MsgCode":""}}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.CancelAssign("CRM_CUST","{"CreateOrgId":0,"Numbers":[],"Ids":"","UseOrgId":0,"NetworkCtrl":""}");
+
+四、JSON格式数据：
+{
+    "CreateOrgId": 0,
+    "Numbers": [],
+    "Ids": "",
+    "UseOrgId": 0,
+    "NetworkCtrl": ""
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 分配 (`Allocate`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     2.1.PkIds：被分配的基础资料内码集合，字符串类型，格式："PkId1,PkId2,..."（必录）
+     2.2.TOrgIds：目标组织内码集合，字符串类型，格式："TOrgId1,TOrgId2,..."（必录）
+
+二、返回结果：
+{"Result":{"ResponseStatus":{"ErrorCode":"","IsSuccess":"false","Errors":[{"FieldName":"","Message":"","DIndex":0}],"SuccessEntitys":[{"Id":"","Number":"","DIndex":0}],"SuccessMessages":[{"FieldName":"","Message":"","DIndex":0}],"MsgCode":""}}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.Allocate("CRM_CUST","{"PkIds":0,"TOrgIds":""}");
+
+四、JSON格式数据：
+{
+    "PkIds": 0,
+    "TOrgIds": ""
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 取消分配 (`CancelAllocate`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     2.1.PkIds：被分配的基础资料内码集合，字符串类型，格式："PkId1,PkId2,..."（必录）
+     2.2.TOrgIds：目标组织内码集合，字符串类型，格式："TOrgId1,TOrgId2,..."（必录）
+
+二、返回结果：
+{"Result":{"ResponseStatus":{"ErrorCode":"","IsSuccess":"false","Errors":[{"FieldName":"","Message":"","DIndex":0}],"SuccessEntitys":[{"Id":"","Number":"","DIndex":0}],"SuccessMessages":[{"FieldName":"","Message":"","DIndex":0}],"MsgCode":""}}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.CancelAllocate("CRM_CUST","{"PkIds":0,"TOrgIds":""}");
+
+四、JSON格式数据：
+{
+    "PkIds": 0,
+    "TOrgIds": ""
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 批量保存 (`BatchSave`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     2.1.NumberSearch：是否用编码搜索基础资料，布尔类型，默认true（非必录）
+     2.2.ValidateFlag：是否验证数据合法性标志，布尔类型，默认true（非必录）注（设为false时不对数据合法性进行校验）
+     2.3.IsDeleteEntry：是否删除已存在的分录，布尔类型，默认true（非必录）
+     2.4.IsEntryBatchFill：是否批量填充分录，默认true（非必录）
+     2.5.NeedUpDateFields：需要更新的字段，数组类型，格式：[key1,key2,...] （非必录）注（更新字段时Model数据包中必须设置内码，若更新单据体字段还需设置分录内码）
+     2.6.NeedReturnFields：需返回结果的字段集合，数组类型，格式：[key,entitykey.key,...]（非必录） 注（返回单据体字段格式：entitykey.key）
+     2.7.SubSystemId：表单所在的子系统内码，字符串类型（非必录）
+     2.8.InterationFlags：交互标志集合，字符串类型，分号分隔，格式："flag1;flag2;..."（非必录） 例如（允许负库存标识：STK_InvCheckResult）
+     2.9.Model：表单数据包，JSON类型（必录）
+     2.10.BatchCount：服务端开启的线程数，整型（非必录） 注（数据包数应大于此值，否则无效）
+     2.11.IsVerifyBaseDataField：是否验证所有的基础资料有效性，布尔类，默认false（非必录）
+     2.12.IsAutoAdjustField：是否自动调整JSON字段顺序，布尔类型，默认false（非必录）
+     2.13.IgnoreInterationFlag：是否允许忽略交互，布尔类型，默认true（非必录）
+     2.14.IsControlPrecision：是否控制精度，为true时对金额、单价和数量字段进行精度验证，默认false（非必录）
+     2.15.ValidateRepeatJson：校验Json数据包是否重复传入，一旦重复传入，接口调用失败，传true则启用校验，传false则不校验（非必录）
+备注:
+1.示例Model数据包中字段顺序不建议改变，否则可能会有相互影响，如果出现字段值被覆盖或丢失，则可以尝试把字段顺序向后调整一下。
+2.示例Model数据包默认包含允许引入的字段，实际按需构建既可。
+3.如需创建关联关系，可参考https://club.kingdee.com/forum.php?mod=viewthread&tid=1394265 。
+4.对于重要API接口，应设置幂等性校验、设置对应候选键（唯一性字段）的唯一索引等防重调用机制，以防并发导致数据重复。
+
+二、返回结果：
+{"Result":{"ResponseStatus":{"ErrorCode":"","IsSuccess":"false","Errors":[{"FieldName":"","Message":"","DIndex":0}],"SuccessEntitys":[{"Id":"","Number":"","DIndex":0}],"SuccessMessages":[{"FieldName":"","Message":"","DIndex":0}],"MsgCode":""},"NeedReturnData":[{}]}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.BatchSave("CRM_CUST","{"NumberSearch":"true","ValidateFlag":"true","IsDeleteEntry":"true","IsEntryBatchFill":"true","NeedUpDateFields":[],"NeedReturnFields":[],"SubSystemId":"","InterationFlags":"","Model":[],"BatchCount":0,"IsVerifyBaseDataField":"false","IsAutoAdjustField":"true","IgnoreInterationFlag":"false","IsControlPrecision":"false","ValidateRepeatJson":"true"}");
+
+四、JSON格式数据：
+{
+    "NumberSearch": "true",
+    "ValidateFlag": "true",
+    "IsDeleteEntry": "true",
+    "IsEntryBatchFill": "true",
+    "NeedUpDateFields": [],
+    "NeedReturnFields": [],
+    "SubSystemId": "",
+    "InterationFlags": "",
+    "Model": [],
+    "BatchCount": 0,
+    "IsVerifyBaseDataField": "false",
+    "IsAutoAdjustField": "true",
+    "IgnoreInterationFlag": "false",
+    "IsControlPrecision": "false",
+    "ValidateRepeatJson": "true"
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 单据查询 (`ExecuteBillQuery`)
+
+```text
+一、请求参数说明：
+1.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     1.1.FormId：业务对象表单Id（必录）
+     1.2.FieldKeys：需查询的字段key集合，字符串类型，格式："key1,key2,..."（必录） 注（查询单据体内码,需加单据体Key和下划线,如：FEntryKey_FEntryId）
+     1.3.FilterString：过滤条件，数组类型，如：[{"Left":"(","FieldName":"Field1","Compare":"67","Value":"111","Right":")","Logic":"0"},{"Left":"(","FieldName":"Field2","Compare":"67","Value":"222","Right":")","Logic":"0"}]
+     1.4.OrderString：排序字段，字符串类型（非必录）
+     1.5.TopRowCount：返回总行数，整型（非必录）
+     1.6.StartRow：开始行索引，整型（非必录）
+     1.7.Limit：最大行数，整型，不能超过10000（非必录）
+     1.8.SubSystemId：表单所在的子系统内码，字符串类型（非必录）
+
+二、返回结果：
+[["FValue1","FValue2",...],["FValue1","FValue2",...],...]
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.ExecuteBillQuery("{"FormId":"","FieldKeys":"","FilterString":[],"OrderString":"","TopRowCount":0,"StartRow":0,"Limit":2000,"SubSystemId":""}");
+
+四、JSON格式数据：
+{
+    "FormId": "",
+    "FieldKeys": "",
+    "FilterString": [],
+    "OrderString": "",
+    "TopRowCount": 0,
+    "StartRow": 0,
+    "Limit": 2000,
+    "SubSystemId": ""
+}
+
+五、参数FilterString说明：
+ 1、Left：左括号
+ 2、FieldName：字段名
+ 3、Compare：比较运算符内码，可通过"填写测试数据"功能生成
+ 4、Value：比较值
+ 5、Right：右括号
+ 6、Logic：逻辑运算符，0或1，0是AND，1是OR
+
+六、参数FieldKeys特殊用法说明：
+ 1、查询单据内码：单据的主键字段名，如物料内码：FMATERIALID
+ 2、查询分录内码：单据体key_分录主键，如：FEntity_FEntryId
+ 3、查询分录行号：单据体key+序号字段标识，如：FEntity_FSeq
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 单据查询(json) (`BillQuery`)
+
+```text
+一、请求参数说明：
+1.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     1.1.FormId：业务对象表单Id（必录）
+     1.2.FieldKeys：需查询的字段key集合，字符串类型，格式："key1,key2,..."（必录） 注（查询单据体内码,需加单据体Key和下划线,如：FEntryKey_FEntryId）
+     1.3.FilterString：过滤条件，数组类型，如：[{"Left":"(","FieldName":"Field1","Compare":"67","Value":"111","Right":")","Logic":"0"},{"Left":"(","FieldName":"Field2","Compare":"67","Value":"222","Right":")","Logic":"0"}]
+     1.4.OrderString：排序字段，字符串类型（非必录）
+     1.5.TopRowCount：返回总行数，整型（非必录）
+     1.6.StartRow：开始行索引，整型（非必录）
+     1.7.Limit：最大行数，整型，不能超过10000（非必录）
+     1.8.SubSystemId：表单所在的子系统内码，字符串类型（非必录）
+
+二、返回结果：
+[{"Key1":"Value1",...},{"Key1":"Value1",...},...]
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.BillQuery("{"FormId":"","FieldKeys":"","FilterString":[],"OrderString":"","TopRowCount":0,"StartRow":0,"Limit":2000,"SubSystemId":""}");
+
+四、JSON格式数据：
+{
+    "FormId": "",
+    "FieldKeys": "",
+    "FilterString": [],
+    "OrderString": "",
+    "TopRowCount": 0,
+    "StartRow": 0,
+    "Limit": 2000,
+    "SubSystemId": ""
+}
+
+五、参数FilterString说明：
+ 1、Left：左括号
+ 2、FieldName：字段名
+ 3、Compare：比较运算符内码，可通过"填写测试数据"功能生成
+ 4、Value：比较值
+ 5、Right：右括号
+ 6、Logic：逻辑运算符，0或1，0是AND，1是OR
+
+六、参数FieldKeys特殊用法说明：
+ 1、查询单据内码：单据的主键字段名，如物料内码：FMATERIALID
+ 2、查询分录内码：单据体key_分录主键，如：FEntity_FEntryId
+ 3、查询分录行号：单据体key+序号字段标识，如：FEntity_FSeq
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 元数据查询 (`QueryBusinessInfo`)
+
+```text
+一、请求参数说明：
+1.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     1.1.FormId：业务对象表单Id（必录）
+
+二、返回结果：
+{"Result":{"ResponseStatus":"","NeedReturnData":"{}"}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.QueryBusinessInfo("{"FormId":"CRM_CUST"}");
+
+四、JSON格式数据：
+{
+    "FormId": ""
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 工作流审批 (`WorkflowAudit`)
+
+```text
+一、请求参数说明：
+1.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     1.1.FormId：业务对象表单Id（必录）
+     1.2.Ids：单据内码集合，字符串类型，格式："Id1,Id2,..."（使用内码时必录）
+     1.3.Numbers：单据编码集合，数组类型，格式：[No1,No2,...]（使用编码时必录）
+     1.4.UserId：审批人用户Id，整型
+     1.5.UserName：用户名称，字符串类型
+     1.6.ApprovalType：审批类型，整型（1：审批通过；2：驳回；3：终止）
+     1.7.ActionResultId：审批项Id，字符串类型
+     1.8.PostId：岗位Id，整型
+     1.9.PostNumber：岗位编码，字符串类型
+     1.10.Disposition：审批意见，字符串类型
+
+二、返回结果：
+{"Result":{"ResponseStatus":"","OperationResults":"{}"}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.WorkflowAudit("{"FormId":"","Ids":[],"Numbers":[],"UserId":0,"UserName":"","ApprovalType":0,"ActionResultId":"","PostId":0,"PostNumber":"","Disposition":""}");
+
+四、JSON格式数据：
+{
+    "FormId": "",
+    "Ids": [],
+    "Numbers": [],
+    "UserId": 0,
+    "UserName": "",
+    "ApprovalType": 0,
+    "ActionResultId": "",
+    "PostId": 0,
+    "PostNumber": "",
+    "Disposition": ""
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 切换组织 (`SwitchOrg`)
+
+```text
+一、请求参数说明：
+1.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     1.1.OrgNumber：组织机构编码，字符串类型，（必录）
+
+二、返回结果：
+{"Result":{"ResponseStatus":{"ErrorCode":"","IsSuccess":"false","Errors":[{"FieldName":"","Message":"","DIndex":0}],"SuccessEntitys":[{"Id":"","Number":"","DIndex":0}],"SuccessMessages":[{"FieldName":"","Message":"","DIndex":0}],"MsgCode":""}}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.SwitchOrg("{"OrgNumber":""}");
+
+四、JSON格式数据：
+{
+    "OrgNumber": ""
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 分组保存 (`GroupSave`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     2.1.GroupFieldKey：分组字段Key，字符串类型（必录） 注（不填时取默认，无默认，取第一个分组）
+     2.2.GroupPkId：分组内码，修改分组数据时必录，整形
+     2.3.FParentId：父分组内码，整型（非必录）
+     2.4.FNumber：分组编码，字符串类型（必录） 注（必须唯一）
+     2.5.FName：分组名，字符串类型（必录）
+     2.6.FDescription：分组描述，字符串类型（非必录）
+
+二、返回结果：
+{"Result":{"ResponseStatus":{"ErrorCode":"","IsSuccess":"false","Errors":[{"FieldName":"","Message":"","DIndex":0}],"SuccessEntitys":[{"Id":"","Number":"","DIndex":0}],"SuccessMessages":[{"FieldName":"","Message":"","DIndex":0}],"MsgCode":""},"Id":""}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.GroupSave("CRM_CUST","{"GroupFieldKey":"","GroupPkId":0,"FParentId":0,"FNumber":"","FName":"","FDescription":""}");
+
+四、JSON格式数据：
+{
+    "GroupFieldKey": "",
+    "GroupPkId": 0,
+    "FParentId": 0,
+    "FNumber": "",
+    "FName": "",
+    "FDescription": ""
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 分组信息查询 (`QueryGroupInfo`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     2.1.FormId：业务对象表单Id（必录）
+     2.2.GroupFieldKey：分组字段Key，字符串类型（必录） 注（不填时取默认，无默认，取第一个分组）
+     2.3.GroupPkIds：分组内码，字符串类型，格式："Id1,Id2,..."(使用分组内码时必录，分组内码和单据内码同时录时，分组内码优先)
+     2.4.Ids：单据内码集合，字符串类型，格式："Id1,Id2,..."（使用内码时必录）
+
+二、返回结果：
+{"Result":{"ResponseStatus":"","NeedReturnData":"{}"}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.QueryGroupInfo("CRM_CUST","{"FormId":"","GroupFieldKey":"","GroupPkIds":"","Ids":""}");
+
+四、JSON格式数据：
+{
+    "FormId": "",
+    "GroupFieldKey": "",
+    "GroupPkIds": "",
+    "Ids": ""
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
+
+## 分组删除 (`GroupDelete`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     2.1.FormId：业务对象表单Id（必录）
+     2.2.GroupFieldKey：分组字段Key，字符串类型（必录）
+     2.3.GroupPkIds：分组内码，字符串类型，格式："Id1,Id2,..."(使用分组内码时必录，分组内码和单据内码同时录时，分组内码优先)
+
+二、返回结果：
+{"Result":{"ResponseStatus":"","NeedReturnData":"{}"}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.GroupDelete("CRM_CUST","{"FormId":"","GroupFieldKey":"","GroupPkIds":""}");
+
+四、JSON格式数据：
+{
+    "FormId": "",
+    "GroupFieldKey": "",
+    "GroupPkIds": ""
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```

@@ -1,0 +1,58 @@
+# MRB评审单 Web API 操作原始内容
+
+> 来源页面：全部 > 质量管理 > 质量管理 > MRB评审单
+
+## 操作列表
+
+| 操作 | 标识 | 文本长度 |
+| --- | --- | ---: |
+| 查询报表数据 | GetSysReportData | 1323 |
+
+## 查询报表数据 (`GetSysReportData`)
+
+```text
+一、请求参数说明：
+1.formid：业务对象表单Id，字符串类型（必录）
+2.data：JSON格式数据（详情参考JSON格式数据）（必录）
+     2.1.CreateOrgId：创建者组织内码（非必录）
+     2.2.Numbers：单据编码集合，数组类型，格式：[No1,No2,...]（使用编码时必录）
+     2.3.Ids：单据内码集合，字符串类型，格式："Id1,Id2,..."（使用内码时必录）
+     2.4.NetworkCtrl：是否启用网控，布尔类型，默认false（非必录）
+
+二、返回结果：
+{"Result":{"ResponseStatus":{"ErrorCode":"","IsSuccess":"false","Errors":[{"FieldName":"","Message":"","DIndex":0}],"SuccessEntitys":[{"Id":"","Number":"","DIndex":0}],"SuccessMessages":[{"FieldName":"","Message":"","DIndex":0}],"MsgCode":""}}}
+
+三、代码示例：
+// 引用SDK组件Kingdee.BOS.WebApi.Client.dll; SDK下载地址：https://openapi.open.kingdee.com/ApiSdkCenter
+var client = new K3CloudApi();
+// 初始化登录认证，appID、appSec可在"第三方系统登录授权"中获取
+client.InitClient("6871005268bf9d", "appID", "appSec", "userName", 2052, "100", "http://xherp.ipecn.com.cn/k3cloud/");
+client.Delete("QM_MRBReviewBill","{"CreateOrgId":0,"Numbers":[],"Ids":"","NetworkCtrl":""}");
+
+四、JSON格式数据：
+{
+    "CreateOrgId": 0,
+    "Numbers": [],
+    "Ids": "",
+    "NetworkCtrl": ""
+}
+
+
+备注：错误代码MsgCode说明
+           0：默认
+           1：上下文丢失
+           2：没有权限
+           3：操作标识为空
+           4：异常
+           5：单据标识为空
+           6：数据库操作失败
+           7：许可错误
+           8：参数错误
+           9：指定字段/值不存在
+           10：未找到对应数据
+           11：验证失败
+           12：不可操作
+           13：网控冲突
+           14：调用限制
+           15：禁止管理员登录
+```
